@@ -36,13 +36,22 @@ func (h *AuthHandler) StartAuth(c *gin.Context) {
 		return
 	}
 
+	err = h.workflowEngine.HandleEvent(instance.ID, "submit_phone", map[string]interface{}{
+		"phone_number": request.PhoneNumber,
+	})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{"instance_id": instance.ID})
 }
 
 func (h *AuthHandler) VerifyOTP(c *gin.Context) {
 	var request struct {
-		InstanceID uint   `json:"instance_id"`
-		OTP        string `json:"otp"`
+		PhoneNumber string `json:"phone_number"`
+		InstanceID  uint   `json:"instance_id"`
+		OTP         string `json:"otp"`
 	}
 	if err := c.ShouldBindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request"})
@@ -50,6 +59,7 @@ func (h *AuthHandler) VerifyOTP(c *gin.Context) {
 	}
 
 	err := h.workflowEngine.HandleEvent(request.InstanceID, "verify_otp", map[string]interface{}{
+		"phone_number":  request.PhoneNumber,
 		"submitted_otp": request.OTP,
 	})
 	if err != nil {
