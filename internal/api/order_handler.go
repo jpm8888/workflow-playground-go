@@ -3,6 +3,7 @@ package api
 import (
 	"app/myproj/internal/order"
 	"app/myproj/pkg/workflow"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -42,10 +43,12 @@ func (h *OrderHandler) CreateOrder(c *gin.Context) {
 
 func (h *OrderHandler) ConfirmPayment(c *gin.Context) {
 	orderID := c.Param("id")
+	fmt.Println("Confirming payment for order", orderID)
 	// Implement payment confirmation logic here
 }
 
 func (h *OrderHandler) FulfillOrder(c *gin.Context) {
 	orderID := c.Param("id")
+	fmt.Println("Fulfilling order", orderID)
 	// Implement order fulfillment logic here
 }

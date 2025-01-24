@@ -42,8 +42,9 @@ func NewAuthWorkflow(authService *AuthService) *workflow.WorkflowDefinition {
 					Guard: func(data map[string]interface{}) bool {
 						phone := data["phone_number"].(string)
 						var user User
-						return authService.db.Where("phone_number = ?", phone).
-							First(&user).Error == gorm.ErrRecordNotFound
+						return errors.Is(authService.db.Where("phone_number = ?", phone).
+							First(&user).Error, authService.db.Where("phone_number = ?", phone).
+							First(&user).Error)
 					},
 				},
 			},
