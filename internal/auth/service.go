@@ -3,6 +3,7 @@ package auth
 import (
 	"crypto/rand"
 	"encoding/base32"
+	"fmt"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	_ "time"
@@ -22,6 +23,8 @@ func (s *AuthService) GenerateOTP() (string, error) {
 	if err != nil {
 		return "", err
 	}
+	// print the OTP to the console
+	fmt.Println(base32.StdEncoding.EncodeToString(buffer)[:6])
 	return base32.StdEncoding.EncodeToString(buffer)[:6], nil
 }
 
