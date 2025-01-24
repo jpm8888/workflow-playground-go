@@ -25,6 +25,9 @@ func NewAuthWorkflow(authService *AuthService) *workflow.WorkflowDefinition {
 						data["otp"] = otp
 						return authService.SendOTP(phone, otp)
 					},
+					// TODO: number of retries on each step, retry functionality
+					// TODO: step timeout (optional)
+					// TODO: workflow validation is mandatory
 				},
 			},
 			"otp_verification": {
@@ -46,6 +49,7 @@ func NewAuthWorkflow(authService *AuthService) *workflow.WorkflowDefinition {
 							First(&user).Error, authService.db.Where("phone_number = ?", phone).
 							First(&user).Error)
 					},
+					// TODO: add postprocessing logic
 				},
 			},
 			"pin_setup": {
